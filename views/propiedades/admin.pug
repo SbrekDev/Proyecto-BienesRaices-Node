@@ -1,0 +1,55 @@
+extends ../layout/admin
+
+block styles 
+    meta(name="csrf-token" content=csrfToken)
+
+block contenido 
+    .py-10 
+        h1.text-4xl.my-10.font-extrabold.text-center Bienes
+            span.font-normal Raices
+        h2.text-center.text-2xl.font-extrabold= pagina
+
+        a(href="/propiedades/crear" class="rounded-md py-2 bg-indigo-600 hover:bg-indigo-700 text-center text-white font-bold px-10 uppercase my-5 transition-colors inline-block w-full sm:w-auto") Publicar Nueva Propiedad 
+
+        // pre= JSON.stringify(propiedades, undefined, 2)
+
+        if propiedades.length 
+
+            div(class="bg-white shadow rounded-lg")
+                ul(class="divide-y divide-gray-200")
+                    each propiedad in propiedades 
+                        li 
+                            div(class="p-6 w-full flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-8 sm:space-y-0 gap-4")
+                                div(class="sm:w-1/4 md:w-1/6")
+                                    img(src=`uploads/${propiedad.imagen}`, alt=`imagen propiedad ${propiedad.titulo}`, class="w-full block rounded-md")
+                                div(class="sm:w-2/4 md:w-3/6 space-y-3")
+                                    a(href=`/propiedad/${propiedad.id}` class="block text-2xl font-extrabold text-indigo-600 truncate")=propiedad.titulo
+                                    p(class="font-bold text-black")=propiedad.categoria.nombre
+                                    p(class="font-bold text-green-600")=propiedad.precio.nombre
+
+                                    a(href=`/mensajes/${propiedad.id}` class="text-gray-600")= `${propiedad.mensajes.length} Mensajes` 
+                                div(class="sm:w-1/4 md:w-2/6 lg:w-96 flex flex-col gap-2 lg:flex-row lg:pl-24")
+                                    button(type="button" data-propiedad-id=`${propiedad.id}` class=`cambiar-estado w-full px-2 py-2 md:py-1 leading-5 font-semibold rounded-md cursor-pointer ${propiedad.publicado ? 'bg-green-100 text-green-800' : 'text-yellow-800 bg-yellow-100'}`)= `${propiedad.publicado ? 'Publicado' : 'No Publicado'}`
+                                    a(href=`/propiedades/editar/${propiedad.id}` class="text-center px-2 py-2 md:py-1 leading-5 font-semibold rounded-md cursor-pointer bg-indigo-100 text-indigo-600") Editar
+                                    form(method="POST" action=`/propiedades/eliminar/${propiedad.id}`)
+                                        input(type="hidden" name="_csrf" value=csrfToken)
+                                        input(type="submit" class=` w-full px-2 py-2 md:py-1 leading-5 font-semibold rounded-md cursor-pointer bg-red-100 text-red-600` value=`Eliminar`) 
+                div(class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6")
+                    div(class="flex-1 flex justify-between sm:hidden")
+                        a(href=`mis-propiedades?pagina=${+paginaActual - 1}` class=`relative inline-flex items-center px-4 py-2 border border-gray-300 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${paginaActual == 1 ? 'pointer-events-none text-gray-400' : ''}`) Anterior 
+                        a(href=`mis-propiedades?pagina=${+paginaActual + 1}` class=`relative inline-flex items-center px-4 py-2 border border-gray-300 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ${paginaActual == paginas ? 'pointer-events-none text-gray-400' : ''}`) Siguiente 
+                    div(class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between")
+                        p(class="text-gray-700 gap-2") Mostrando 
+                            span(class="font-medium") #{offset + 1} a 
+                            span(class="font-medium") #{total < limit + offset ? total : limit + offset} de 
+                            span(class="font-medium") #{total} resultados
+                    div(class="hidden sm:block") 
+                        nav(class="relative z-0 inline-flex rounded-md shadow-md")
+                            - var n = 1;
+                                while n <= paginas 
+                                    a(href=`/mis-propiedades?pagina=${n}` class=`relative inline-flex items-center px-4 py-2 border font-medium rounded-md ${paginaActual == n ? 'bg-indigo-500 text-white' : 'text-gray-500 hover:bg-indigo-300 hover:text-white'}`) #{n++}                          
+        else 
+            p.text-center No hay Propiedades
+
+block scripts 
+    script(src="/js/cambiarEstado.js")

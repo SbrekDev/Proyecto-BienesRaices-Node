@@ -1,0 +1,65 @@
+extends ./layout/app
+
+block styles 
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
+
+block contenido
+    div(class="py-5")
+        h1(class="text-center text-4xl font-extrabold") Ubicación en el mapa 
+
+        div(class="flex flex-col md:flex-row items-center py-10 gap-4")
+            h2(class="uppercase text-gray-800 font-bold") Filtrar Propiedades
+
+            div(class="w-full md:w-auto flex items-center gap-2")
+                label(for="categorias" class="w-24 uppercase text-gray-500 font-bold") Categorías 
+                select(id="categorias" class="flex-1 bg-white w-full px-3 py-2 border border-gray-300 rounded-md shadow") 
+                    option(value="") -- Seleccione --
+                    each categoria in categorias 
+                        option(value=categoria.id)= categoria.nombre
+
+            div(class="w-full md:w-auto flex items-center gap-2")
+                label(for="precios" class="w-24 uppercase text-gray-500 font-bold") Precios 
+                select(id="precios" class="flex-1 bg-white w-full px-3 py-2 border border-gray-300 rounded-md shadow") 
+                    option(value="") -- Seleccione --
+                    each precio in precios 
+                        option(value=precio.id)= precio.nombre
+            
+
+        div(id="mapa-inicio" class="h-[600px] mt-5")
+
+        section(class="pt-5")
+            h2(class="text-center text-4xl font-bold pt-10") Casas en Venta
+
+            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-14")
+                each casa in casas
+                    div(class="bg-white shadow rounded-lg")
+                        img(class="object-cover h-72 w-full" src=`/uploads/${casa.imagen}` alt=`imagen casa ${casa.titulo}`)
+                        div(class="p-5 space-y-3")
+                            h3(class="text-2xl font-bold")= casa.titulo
+                            p(class="text-gray-600") Habitaciones: 
+                                span(class="text-gray-800 font-bold")= casa.habitaciones
+                            p(class="text-gray-600") Baños: 
+                                span(class="text-gray-800 font-bold")= casa.wc
+                            p(class="text-gray-600") Precio: 
+                                span(class="text-green-600 font-bold")= casa.precio.nombre
+                            a(href=`/propiedad/${casa.id}` class="bg-indigo-600 w-full text-center font-bold p-2 block uppercase text-white rounded-md") Ver Propiedad 
+        section(class="pt-5")
+            h2(class="text-center text-4xl font-bold pt-10") Departamentos en Venta
+
+            div(class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-14")
+                each departamento in departamentos
+                    div(class="bg-white shadow rounded-lg")
+                        img(class="object-cover h-72 w-full" src=`/uploads/${departamento.imagen}` alt=`imagen casa ${departamento.titulo}`)
+                        div(class="p-5 space-y-3")
+                            h3(class="text-2xl font-bold")= departamento.titulo
+                            p(class="text-gray-600") Habitaciones: 
+                                span(class="text-gray-800 font-bold")= departamento.habitaciones
+                            p(class="text-gray-600") Baños: 
+                                span(class="text-gray-800 font-bold")= departamento.wc
+                            p(class="text-gray-600") Precio: 
+                                span(class="text-green-600 font-bold")= departamento.precio.nombre
+                            a(href=`/propiedad/${departamento.id}` class="bg-indigo-600 w-full text-center font-bold p-2 block uppercase text-white rounded-md") Ver Propiedad
+block scripts 
+    script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")                                          
+    script(src="/js/mapaInicio.js")                                          
+    
