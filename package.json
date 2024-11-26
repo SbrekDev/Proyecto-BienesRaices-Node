@@ -10,7 +10,8 @@
     "js": "webpack --watch",
     "devfe": "concurrently \" npm run css\" \" npm run js\"",
     "db:importar": "node ./seed/seeder.js -i",
-    "db:eliminar": "node ./seed/seeder.js -e"
+    "db:eliminar": "node ./seed/seeder.js -e",
+    "build": "npm run css && npm run js"
   },
   "keywords": [
     "mvc",
